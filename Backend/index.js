@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser"
 
 // import all routes 
 import userRoutes from "./src/routes/user.routes.js"
+import reportRoutes from "./src/routes/reports.routes.js"
 
 
 const app = express()
@@ -19,6 +20,7 @@ const PORT = process.env.PORT
 
 // All routes structure
 app.use('/api/v1/users',userRoutes)
+app.use('/api/v1/reports',reportRoutes)
 
 
 connectdb()

@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken"
 
 export const isLoggedIn = asyncHandler(async(req,res,next) => {
     const token = req.cookies.AccessToken
-    
+    console.log("In auth middleware")
     if (!token){
         return res.status(404).json(
             new ApiResponse(404,null,"No token found")
