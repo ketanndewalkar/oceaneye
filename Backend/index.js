@@ -5,7 +5,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 // import all routes 
-import userRoutes from "./src/routes/user.routes.js"
+import userRoutes from "./src/routes/user.routes.js" 
 
 
 const app = express()
@@ -24,9 +24,9 @@ app.use('/api/v1/users',userRoutes)
 connectdb()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is running at ${PORT}`);
+      console.log(`Server is running at ${process.env.PORT}`);
     });
-  })
+  }) 
   .catch((err) => {
     console.error("Error", err);
   });
