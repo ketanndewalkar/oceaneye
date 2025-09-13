@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "start":"node --watch index.js"
+    "start": "node --watch index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,9 +22,11 @@
     "exiftool-vendored": "^30.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mailgen": "^2.0.29",
     "mongoose": "^8.18.1",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0"
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemailer": "^7.0.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

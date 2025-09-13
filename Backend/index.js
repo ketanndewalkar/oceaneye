@@ -5,12 +5,10 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 // import all routes 
-<<<<<<< HEAD
+
 import userRoutes from "./src/routes/user.routes.js"
 import reportRoutes from "./src/routes/reports.routes.js"
-=======
-import userRoutes from "./src/routes/user.routes.js" 
->>>>>>> 9b01cde35251bc5deb0e739bfd00f1c0230d9a24
+
 
 
 const app = express()

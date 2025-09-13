@@ -5,7 +5,7 @@ import Report from "../models/reports.models.js";
 import { exiftool } from "exiftool-vendored";
 import axios from "axios";
 
-export const UploadReport = asyncHandler(async (req, res) => {
+export const uploadReport = asyncHandler(async (req, res) => {
   try {
     const { title, description, latitude, longitude } = req.body;
     console.log(
@@ -54,8 +54,11 @@ export const UploadReport = asyncHandler(async (req, res) => {
         gpsLongitude: gpsLongitude || null,
       };
     } catch (err) {
-      console.error("No EXIF data found, falling back to browser location", err);
-    } 
+      console.error(
+        "No EXIF data found, falling back to browser location",
+        err
+      );
+    }
 
     const report = await Report.create({
       uploadedBy: userId,
@@ -64,8 +67,8 @@ export const UploadReport = asyncHandler(async (req, res) => {
       images: [
         {
           url: imageUrl,
-          latitude:  userLatitude,
-          longitude:  userLongitude,
+          latitude: userLatitude,
+          longitude: userLongitude,
           exif: exifData,
         },
       ],
@@ -81,4 +84,30 @@ export const UploadReport = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new ApiError(500, error.message || "Something went wrong");
   }
+});
+
+export const getAllReports = asyncHandler(async (req, res) => {
+  const reports = await Report.find();
+  if (reports.length === 0) {
+    throw new ApiError(404, "No report found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, reports, "All reports fetched succesfully"));
+});
+
+export const getReportById = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  if (!reportId) {
+    throw new ApiError(401, "reportId is required");
+  }
+  const report = await Report.findById({ _id: reportId });
+
+  if (!report) {
+    throw new ApiError(404, "No report found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, report, "Report for id fetched"));
 });

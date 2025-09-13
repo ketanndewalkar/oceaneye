@@ -36,6 +36,22 @@ const UserSchema = new mongoose.Schema(
       enum: ["citizens", "officials", "analysts"],
       default: "citizens",
     },
+    forgotPasswordToken : {
+      type: String
+    },
+    forgotPasswordExpiry :{
+      type: Date
+    },
+    isEmailVerified : {
+      type: Boolean,
+      default: false
+    },
+    emailVerificationToken : {
+      type:String
+    },
+    emailVerificationExpiry : {
+      type: Date
+    }
   },
   { timestamps: true }
 );
