@@ -1,41 +1,35 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
+const imageSchema = new mongoose.Schema(
+  {
+    url: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    location: { type: String },
+    uploadedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
 
-
-const ReportsSchema = new mongoose.Schema({
-    userId : {
-        type:mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required:true
+const reportSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    title : {
-        type: String,
-        trim: true
+    title: {
+      type: String,
+      required: true,
     },
     description: {
-       type : String,
-       required : true,
-       trim: true
+      type: String,
     },
-    imageUrl : {
-        type: String,
-        required: true,
-        trim:true,
-    },
-    latitude : {
-       type: String,
-       required:true,
-    },
-    longitude :{
-        type: String,
-        required:true
-    },
-    location : {
-        type : String,
-        required:true
-    }
-},{timestamps:true})
+    status: { type: String, enum: ["pending", "approved"],
+    default: "pending" },
+    images: [imageSchema],
+  },
+  { timestamps: true }
+);
 
-const Reports = mongoose.model("report",ReportsSchema)
-
-export default Reports
+export default mongoose.model("Report", reportSchema);
