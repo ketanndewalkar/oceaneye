@@ -2,7 +2,11 @@ import User from "../models/user.models.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
-import { emailVerificationMailgenContent, forgotPasswordMailgenContent, sendEmail } from "../utils/mail.js";
+import {
+  emailVerificationMailgenContent,
+  forgotPasswordMailgenContent,
+  sendEmail,
+} from "../utils/mail.js";
 import crypto from "crypto";
 
 export const register = asyncHandler(async (req, res) => {
@@ -17,7 +21,6 @@ export const register = asyncHandler(async (req, res) => {
   if (existingUser) {
     throw new ApiError(401, "User Already exists");
   }
-  
 
   const user = await User.create({
     firstName,
@@ -26,14 +29,13 @@ export const register = asyncHandler(async (req, res) => {
     password,
     phoneNo,
     role,
-    
   });
 
   if (!user) {
     throw new ApiError(500, "Issue while registering");
   }
   const emailVerificationToken = crypto.randomBytes(32).toString("hex");
-  console.log(emailVerificationToken)
+  console.log(emailVerificationToken);
   const hashedToken = crypto
     .createHash("sha256")
     .update(emailVerificationToken)
@@ -42,7 +44,7 @@ export const register = asyncHandler(async (req, res) => {
   user.emailVerificationToken = hashedToken;
   user.emailVerificationExpiry = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
-  const emailUrl = `${process.env.BASE_URL}/api/v1/auth/verify-email/${emailVerificationToken}`;
+  const emailUrl = `${process.env.BASE_URL}/api/v1/users/verify-email/${emailVerificationToken}`;
   await sendEmail({
     email: user.email,
     subject: "Please verify your email",
@@ -137,7 +139,7 @@ export const forgotPasswordRequest = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(401,"Invalid token")
+    throw new ApiError(401, "Invalid token");
   }
   const unhashedToken = crypto.randomBytes(32).toString("hex");
 
@@ -146,12 +148,12 @@ export const forgotPasswordRequest = asyncHandler(async (req, res) => {
     .update(unhashedToken)
     .digest("hex");
 
-  user.forgotPassword = hashedToken;
+  user.forgotPasswordToken = hashedToken;
   user.forgotPasswordExpiry = Date.now() + 10 * 60 * 1000;
 
   user.save({ validateBeforeSave: false });
   const resetUrl = `${process.env.BASE_URL}/api/v1/auth/reset-password/${unhashedToken}`;
-  console.log(unhashedToken)
+  // console.log(unhashedToken)
   await sendEmail({
     email: user.email,
     subject: "Please click button to reset password",
@@ -162,42 +164,42 @@ export const forgotPasswordRequest = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Check your inbox for reset url"));
 });
 
-// export const resetPassword = asyncHandler(async (req, res) => {
-//  const { resetToken} = req.params;
-//  console.log("rt",resetToken)
-//   const { password, confirmPassword } = req.body;
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { resetToken } = req.params;
 
-//   const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-//   console.log(hashedToken)
+  const { password, confirmPassword } = req.body;
 
-//   const user = await User.findOne({
-//     forgotPassword: hashedToken,
-//     forgotPasswordExpiry: { $gt: Date.now() },
-//   });
-//   console.log("user",user)
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-//   if (!user) {
-//     throw new ApiError(401, "Invalid token");
-//   }
+  const user = await User.findOne({
+    forgotPasswordToken: hashedToken,
+    forgotPasswordExpiry: { $gt: Date.now() },
+  });
 
-//   if (password !== confirmPassword) {
-//     throw new ApiError(400, "Password and confirm password do not match");
-//   }
+  if (!user) {
+    throw new ApiError(401, "Invalid token");
+  }
 
-//   user.password = password;
-//   user.forgotPassword = undefined;
-//   user.forgotPasswordExpiry = undefined;
+  if (password !== confirmPassword) {
+    throw new ApiError(400, "Password and confirm password do not match");
+  }
 
-//   await user.save({ validateBeforeSave: false });
+  user.password = password;
+  user.forgotPassword = undefined;
+  user.forgotPasswordExpiry = undefined;
 
-//   res
-//     .status(200)
-//     .json(
-//       new ApiResponse(
-//         200,
-//         "",
-//         "Password reset successfully. You can log in now."
-//       )
-//     );
-// });
+  await user.save({ validateBeforeSave: false });
 
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        "",
+        "Password reset successfully. You can log in now."
+      )
+    );
+});
