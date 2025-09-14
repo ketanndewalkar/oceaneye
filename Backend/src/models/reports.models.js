@@ -49,10 +49,10 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    reportStatus: {
-      type: String,
-      enum: ["pending", "approved"],
-      default: "pending",
+    reportStatus:{
+      type:String,
+      enum: ["pending","approved","rejected"],
+      default: "pending"
     },
     images: [imageSchema],
   },
