@@ -16,7 +16,7 @@ const imageSchema = new mongoose.Schema(
       required: true,
     },
     location: {
-      type: String,
+      type: Object,
     },
     exif: {
       make: String,     

@@ -28,12 +28,11 @@ export const uploadReport = asyncHandler(async (req, res) => {
     const userLatitude = latitude;
     const userLongitude = longitude;
 
-    // const response = await axios.get(
-    //   `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${userLatitude}&lon=${userLongitude}`
-    // );
-    // console.log(response)
+    const response = await axios.get(`https://us1.locationiq.com/v1/reverse?key=${process.env.LOCATION_API_KEY}&lat=28.6139&&lon=77.2090&&format=json`)
 
-    // const location = response.data.display_name;
+    
+
+    const location = response.data.address;
 
     let exifData = {};
     let gpsLatitude, gpsLongitude;
@@ -69,6 +68,7 @@ export const uploadReport = asyncHandler(async (req, res) => {
           url: imageUrl,
           latitude: userLatitude,
           longitude: userLongitude,
+          location,
           exif: exifData,
         },
       ],

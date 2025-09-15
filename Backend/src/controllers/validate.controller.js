@@ -4,41 +4,55 @@ import { ApiResponse } from "../utils/api-response.js";
 import Report from "../models/reports.models.js";
 import Verification from "../models/verification.models.js";
 
-export const validateReport = asyncHandler(async (req,res) => {
-    const {reportId} = req.params
-    const {status,remark} = req.body
+export const validateReport = asyncHandler(async (req, res) => {
+  const { reportId } = req.params;
+  const { status, remark } = req.body;
 
-    if(!reportId || !status || !remark){
-        throw new ApiError(400,"All fields are required")
-    }
+  const validStatuses = ["approved", "rejected"];
+  if (!validStatuses.includes(status)) {
+    throw new ApiError(400, "Invalid status value");
+  }
 
-    const userId = req.user._id
+  if (!reportId || !status || !remark) {
+    throw new ApiError(400, "All fields are required");
+  }
 
-    const report = await Report.findById({_id:reportId})
+  const userId = req.user._id;
 
-    if(!report){
-        throw new ApiError(404,"All fields are required")
-    }
+  const report = await Report.findById({ _id: reportId });
 
-    if(report.reportStatus === "approved"){
-        throw new ApiError(400,"Report already verified")
-    }
+  if (!report) {
+    throw new ApiError(404, "No report found");
+  }
 
-    const verifiedReport = await Verification.create({
-        reportId,
-        verifiedBy: userId,
-        status,
-        remark
-    })
+  if (report.reportStatus === "approved") {
+    throw new ApiError(400, "Report already verified");
+  }
 
-    if(!verifiedReport){
-        throw new ApiError(500,"Error while updating verification status of report")
-    }
-    
-    report.reportStatus = status
-    await report.save({validateBeforeSave:false})
+  const verifiedReport = await Verification.create({
+    reportId,
+    verifiedBy: userId,
+    status,
+    remark,
+  });
 
-    return res.status(200).json(
-        new ApiResponse(200,verifiedReport,"Updated verification status of report")
-    )
-})
+  if (!verifiedReport) {
+    throw new ApiError(
+      500,
+      "Error while updating verification status of report"
+    );
+  }
+
+  report.reportStatus = status;
+  await report.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        verifiedReport,
+        "Updated verification status of report"
+      )
+    );
+});
