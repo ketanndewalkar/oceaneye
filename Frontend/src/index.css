@@ -1,1 +1,118 @@
 @import "tailwindcss";
+
+/* * {
+  margin: 0;
+  padding: 0;
+} */
+
+body,html{
+    width:100vw;
+    height:fit-content;
+    overflow-x:hidden;
+}
+
+@media (min-width: 100px) and (max-width: 900px) {
+  .nav{
+    height:8vh;
+    top:1vw;
+  }
+
+  .home{
+    height:fit-content;
+  }
+  .home1{
+    padding-top:15vh;
+    padding-bottom:5vh;
+  }
+
+  .hero11{
+    font: weight 1000px;
+  }
+
+  .home12{
+    font-size:3.2vw;
+    margin:5vw 0;
+    padding:0 5vw;
+  }
+  .home13{
+    padding:1vw 4vw ;
+  }
+
+  .i{
+    font-size:4vw;
+  }
+
+  .home2{
+    height: fit-content;
+  }
+
+  .home221{
+    width:90vw;
+    height:fit-content;
+    padding:6vw
+  }
+  .home22111{
+    padding:2vw
+  }
+
+  .home22{
+    margin:5vw 0;
+    gap:10vw;
+  }
+  .home2211 h1{
+    font-size:5vw;
+    margin:3vw 0;
+  }
+
+  .home221 p{
+    font-size:3vw;
+  }
+
+  .home22111 .icons{
+    font-size:10vw
+  }
+
+  .home3{
+    padding:5vw 5vw;
+  }
+
+  .home31 h1{
+    font-size:6vw;
+  }
+  .home31 p{
+    font-size:2.5vw;
+  }
+  .home32{
+    flex-direction:column;
+    gap:10vw;
+  }
+  .home3card{
+    width: 90vw;
+    height: fit-content;
+  }
+
+  .home3card2 h2{
+    font-size:5vw;
+  }
+
+  .home3card2 p{
+    font-size:3.2vw;
+  }
+
+  .home3card21{
+    margin:3vw 0;
+  }
+
+  .home3card211{
+    gap:3vw;
+  }
+
+  .home3card212{
+    font-size:4vw;
+  }
+
+  .home3{
+    height:fit-content;
+  }
+
+}

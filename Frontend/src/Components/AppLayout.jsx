@@ -6,7 +6,7 @@ import Footer from "./Footer";
 const AppLayout = () => {
   return (
     <>
-      <div className="w-dvw h-fit overflow-x-hidden">
+      <div className="w-screen h-fit overflow-x-hidden bg-gray-200relative">
         <Navbar/>
         <Outlet/>
         <Footer/>
