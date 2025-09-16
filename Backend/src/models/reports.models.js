@@ -49,7 +49,16 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    reportStatus:{
+    moderatorVerificationStatus : {
+      type: String,
+      enum : ["pending","approved","rejected","Information"],
+      default : "pending"
+    },
+    moderatorApprovedCount : {
+      type:Number,
+      default:0
+    },
+    reportVerificationStatus:{
       type:String,
       enum: ["pending","approved","rejected"],
       default: "pending"

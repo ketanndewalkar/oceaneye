@@ -7,10 +7,10 @@ import axios from "axios";
 
 export const uploadReport = asyncHandler(async (req, res) => {
   try {
-    const { title, description,userEnteredLocation, latitude, longitude } = req.body;
-    
+    const { title, description, userEnteredLocation, latitude, longitude } =
+      req.body;
 
-    if (!title || !description || !latitude || !longitude ) {
+    if (!title || !description || !latitude || !longitude) {
       throw new ApiError(401, "All fields are required");
     }
 
@@ -26,9 +26,9 @@ export const uploadReport = asyncHandler(async (req, res) => {
     const BrowserLatitude = latitude;
     const BrowserLongitude = longitude;
 
-    const response = await axios.get(`https://us1.locationiq.com/v1/reverse?key=${process.env.LOCATION_API_KEY}&lat=28.6139&&lon=77.2090&&format=json`)
-
-    
+    const response = await axios.get(
+      `https://us1.locationiq.com/v1/reverse?key=${process.env.LOCATION_API_KEY}&lat=28.6139&&lon=77.2090&&format=json`
+    );
 
     const location = response.data.address;
 
@@ -110,3 +110,39 @@ export const getReportById = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, report, "Report for id fetched"));
 });
+
+// Need to design controller
+// 1. All pending Reports for moderator controller
+// 1. All pending Reports Status Update moderator controller
+// 2. All pending Reports Status Update official controller
+// 2. All pending Reports for moderator controller
+
+export const PendingReports = asyncHandler(async (req, res) => {
+  // This controller is for all pending reports needs to be reviewed by moderators
+  const reports = await Report.find({ moderatorVerificationStatus: "pending" }).populate("uploadedBy");
+
+ 
+
+  if (reports.length === 0) {
+    throw new ApiError(404, "No reports found");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200,reports,"All Pending Reports Fetched..")
+  )
+
+});
+
+export const officialReviewPending = asyncHandler(async(req,res) => {
+  const reports = await Report.find({
+    moderatorApprovedCount : {$gte: 1},
+    officialVerificationStatus: { $ne: "approved" }
+  })
+  if(!reports){
+    throw new ApiError(404,"No Report found")
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200,reports,"All pending Reports Fetched Succesfully")
+  )
+})
