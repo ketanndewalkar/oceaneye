@@ -1,98 +1,124 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from 'react';
+import { Link } from 'react-router';
 
-const Login = () => {
+// Reusable Arrow Icon Component
+const ArrowRightIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    fill="currentColor"
+    className="inline-block ml-1"
+    viewBox="0 0 16 16"
+  >
+    <path
+      fillRule="evenodd"
+      d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"
+    />
+  </svg>
+);
+
+// Reusable Form Input Component
+const FormInput = ({ id, label, ...props }) => (
+  <div className="mb-6">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
+    <input
+      id={id}
+      {...props}
+      className="block w-full px-4 py-3 border-b-2 border-gray-200 focus:outline-none focus:border-blue-600 transition-colors"
+      autoComplete="off"
+    />
+  </div>
+);
+
+export default function Login() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const values = Object.fromEntries(formData.entries());
-    console.log("Success:", values);
+    console.log("Login attempt with:", formData);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8"
-      >
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Login
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Username */}
-          <motion.div
-            whileFocus={{ scale: 1.02 }}
-            className="flex flex-col space-y-1"
-          >
-            <label
-              htmlFor="username"
-              className="text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              required
-              placeholder="Enter your username"
-              className="w-full px-4 py-2 border rounded-xl text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+    <div className="min-h-screen font-sans md:flex">
+      {/* Left Side: Image with Blue Gradient Overlay */}
+      <div className="hidden md:block md:w-2/3 relative">
+        <img
+          src="/assets/loginpageimage.jpg"
+          alt="A person working on a tablet"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 opacity-70"></div>
+      </div>
+
+      {/* Right Side: Login Form */}
+      <div className="w-full md:w-1/3 bg-white flex flex-col justify-center p-8 sm:p-12 md:rounded-5xl">
+        <div className="w-full max-w-md mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-left">
+            Login
+          </h1>
+          
+          <form onSubmit={handleSubmit}>
+            <FormInput 
+              id="email" 
+              type="email" 
+              label="Email" 
+              placeholder="Email address..." 
+              value={formData.email} 
+              onChange={handleInputChange} 
             />
-          </motion.div>
-
-          {/* Password */}
-          <motion.div
-            whileFocus={{ scale: 1.02 }}
-            className="flex flex-col space-y-1"
-          >
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              placeholder="Enter your password"
-              className="w-full px-4 py-2 border rounded-xl text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+            <FormInput 
+              id="password" 
+              type="password" 
+              label="Password" 
+              placeholder="********" 
+              value={formData.password} 
+              onChange={handleInputChange}
             />
-          </motion.div>
+            
+            <div className="flex items-center justify-between mb-6 text-sm">
+              <div className="flex items-center">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember" className="ml-2 block text-gray-900">
+                  Remember me
+                </label>
+              </div>
+              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot password?
+              </a>
+            </div>
 
-          {/* Remember Me */}
-          <div className="flex items-center justify-between">
-            <label className="flex items-center space-x-2 text-gray-600 text-sm">
-              <input
-                type="checkbox"
-                name="remember"
-                className="rounded border-gray-300 focus:ring-blue-500"
-              />
-              <span>Remember me</span>
-            </label>
-            <button
-              type="button"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              Forgot Password?
-            </button>
-          </div>
-
-          {/* Submit Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition-colors"
-          >
-            Submit
-          </motion.button>
-        </form>
-      </motion.div>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <button
+                type="submit"
+                className="flex-grow sm:flex-grow-0 px-10 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-full hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
+              >
+                Login
+              </button>
+              <Link 
+                to="/signup" 
+                className="font-semibold text-gray-600 hover:text-blue-700 transition-colors duration-300"
+              >
+                Sign Up <ArrowRightIcon />
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}
