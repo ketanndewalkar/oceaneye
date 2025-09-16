@@ -10,13 +10,17 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Hero2 from "./Pages/Home2";
 import Hero3 from "./Pages/Hero3";
+import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <>
-        <AppLayout />
+        <ProtectedRoute>
+          <AppLayout />
+        </ProtectedRoute>
       </>
     ),
     children: [
@@ -47,7 +51,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/about",
+        path: "/viewReports",
         element: (
           <>
             <About />
@@ -85,6 +89,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      <Toaster />
       <RouterProvider router={router} />
     </>
   );

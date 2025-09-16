@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router';
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { AuthContext } from "../Context/AuthContext.jsx";
 
 // An icon component for the arrow in the "Sign in" link
 const ArrowRightIcon = () => (
@@ -19,45 +22,70 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
-// A reusable input field component to keep the main form clean
-const FormInput = ({ id, label, type = 'text', placeholder }) => {
-  const [value, setValue] = useState('');
+// Reusable input field component
+const FormInput = ({ id, label, type = "text", placeholder, value, onChange }) => (
+  <div className="mb-6">
+    <label htmlFor={id} className="block text-gray-700 text-sm font-semibold mb-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      id={id}
+      name={id}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full bg-transparent text-gray-700 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors duration-300 py-2"
+      autoComplete="off"
+    />
+  </div>
+);
 
-  return (
-    <div className="mb-6">
-      <label htmlFor={id} className="block text-gray-700 text-sm font-semibold mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        id={id}
-        name={id}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        className="w-full bg-transparent text-gray-700 border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-colors duration-300 py-2"
-        autoComplete="off"
-      />
-    </div>
-  );
-};
-
-// The main App component containing the entire page
+// Main component
 export default function Signup() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNo: "7657567",
+    password: "",
+  });
   const [agreed, setAgreed] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted!");
+  const {login} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(formData)
+      const res = await axios.post("http://localhost:4000/api/v1/users/register",formData);
+      if(res.status===201){
+        login(res.data.data);
+        toast(res.data.message);
+        navigate("/");
+      }else{
+        toast("status code:",res.status);
+      }
+    } catch (error) {
+      console.log(err)
+    }
+    
+    
+
+  };
+
   return (
     <div className="h-fit md:h-screen w-screen bg-gray-100 font-sans flex items-center justify-center">
       <div className="h-full w-screen">
-        
         <div className="h-full w-screen bg-white shadow-2xl rounded-none overflow-hidden md:flex">
-          
-          {/* Left Side: Image with Gradient Overlay */}
+          {/* Left Side: Image */}
           <div className="hidden md:block md:w-2/3 relative">
             <img
               src="/assets/loginpageimage.jpg"
@@ -72,33 +100,57 @@ export default function Signup() {
             <h1 className="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-left">
               Sign Up
             </h1>
-            
+
             <form onSubmit={handleSubmit} className="flex flex-col justify-center h-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-4">
-                <FormInput id="firstName" label="First Name" placeholder="First Name..." />
-                <FormInput id="lastName" label="Last Name" placeholder="Last Name..." />
-              </div>
-              <FormInput id="email" type="email" label="Email" placeholder="Email address..." />
-              <FormInput id="username" label="Username" placeholder="Username..." />
-              <FormInput id="phoneNumber" type="tel" label="Phone Number" placeholder="Phone Number..." />
-              <FormInput id="password" type="password" label="Password" placeholder="********" />
-              <FormInput id="repeatPassword" type="password" label="Repeat Password" placeholder="********" />
-              
-              {/* Terms of User Checkbox */}
-              <div className="flex items-center mb-6">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                <FormInput
+                  id="firstName"
+                  label="First Name"
+                  placeholder="First Name..."
+                  value={formData.firstName}
+                  onChange={handleChange}
                 />
-                <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
-                  I agree to the <a href="#" className="font-medium text-blue-600 hover:text-blue-500">Terms of User</a>
-                </label>
+                <FormInput
+                  id="lastName"
+                  label="Last Name"
+                  placeholder="Last Name..."
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
               </div>
+              <FormInput
+                id="email"
+                type="email"
+                label="Email"
+                placeholder="Email address..."
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <FormInput
+                id="username"
+                label="Username"
+                placeholder="Username..."
+                value={formData.username}
+                onChange={handleChange}
+              />
+              <FormInput
+                id="phoneNo"
+                type="tel"
+                label="Phone Number"
+                placeholder="Phone Number..."
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+              <FormInput
+                id="password"
+                type="password"
+                label="Password"
+                placeholder="********"
+                value={formData.password}
+                onChange={handleChange}
+              />
 
-              {/* Submit Button and Sign In Link */}
+              {/* Submit & Sign In */}
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <button
                   type="submit"
@@ -106,7 +158,10 @@ export default function Signup() {
                 >
                   Sign Up
                 </button>
-                <Link to="/login" className="font-semibold text-gray-600 hover:text-blue-700 transition-colors duration-300">
+                <Link
+                  to="/login"
+                  className="font-semibold text-gray-600 hover:text-blue-700 transition-colors duration-300"
+                >
                   Sign in <ArrowRightIcon />
                 </Link>
               </div>

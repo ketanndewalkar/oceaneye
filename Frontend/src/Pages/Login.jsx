@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router';
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router';
+import { AuthContext } from '../Context/AuthContext';
 
 // Reusable Arrow Icon Component
 const ArrowRightIcon = () => (
@@ -38,15 +41,28 @@ export default function Login() {
     email: '',
     password: '',
   });
-
+  const {login} = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempt with:", formData);
+    try {
+      console.log(formData);
+      const res = await axios.post("http://localhost:4000/api/v1/users/login",formData);
+      if(res.status===200){
+        login(res.data.data);
+        toast(res.data.message);
+        navigate("/");
+      }else{
+        toast("status code:",res.status);
+      }
+    } catch (error) {
+      console.log(err)
+    }
   };
 
   return (
