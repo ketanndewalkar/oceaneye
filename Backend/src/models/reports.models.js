@@ -54,6 +54,10 @@ const reportSchema = new mongoose.Schema(
       enum: ["pending","approved","rejected"],
       default: "pending"
     },
+    userEnteredLocation:{
+      type:String,
+      
+    },
     images: [imageSchema],
   },
   { timestamps: true }

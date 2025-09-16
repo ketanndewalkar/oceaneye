@@ -7,12 +7,10 @@ import axios from "axios";
 
 export const uploadReport = asyncHandler(async (req, res) => {
   try {
-    const { title, description, latitude, longitude } = req.body;
-    console.log(
-      `Title: ${title} Description: ${description} latitude: ${latitude} longitude: ${longitude}`
-    );
+    const { title, description,userEnteredLocation, latitude, longitude } = req.body;
+    
 
-    if (!title || !description || !latitude || !longitude) {
+    if (!title || !description || !latitude || !longitude ) {
       throw new ApiError(401, "All fields are required");
     }
 
@@ -25,8 +23,8 @@ export const uploadReport = asyncHandler(async (req, res) => {
     console.log(imageUrl);
     console.log(userId);
 
-    const userLatitude = latitude;
-    const userLongitude = longitude;
+    const BrowserLatitude = latitude;
+    const BrowserLongitude = longitude;
 
     const response = await axios.get(`https://us1.locationiq.com/v1/reverse?key=${process.env.LOCATION_API_KEY}&lat=28.6139&&lon=77.2090&&format=json`)
 
@@ -66,9 +64,10 @@ export const uploadReport = asyncHandler(async (req, res) => {
       images: [
         {
           url: imageUrl,
-          latitude: userLatitude,
-          longitude: userLongitude,
+          latitude: BrowserLatitude,
+          longitude: BrowserLongitude,
           location,
+          userEnteredLocation,
           exif: exifData,
         },
       ],

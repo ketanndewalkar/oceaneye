@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser"
 import userRoutes from "./src/routes/user.routes.js"
 import reportRoutes from "./src/routes/reports.routes.js"
 import validateRoutes from "./src/routes/validate.routes.js"
+import adminRoutes from "./src/routes/admin.routes.js"
 
 
 const app = express()
@@ -24,6 +25,7 @@ const PORT = process.env.PORT
 app.use('/api/v1/users',userRoutes)
 app.use('/api/v1/reports',reportRoutes)
 app.use('/api/v1/validate',validateRoutes)
+app.use('/api/v1/admin',adminRoutes)
 
 
 connectdb()
