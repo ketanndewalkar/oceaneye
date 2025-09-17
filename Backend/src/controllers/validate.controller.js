@@ -66,48 +66,58 @@ export const validateReport = asyncHandler(async (req, res) => {
 // 2. All pending Reports Status Update moderator controller
 
 export const moderatorValidator = asyncHandler(async (req, res) => {
-  const { reportId } = req.params;
-  const { status, remark } = req.body;
+  const {reportId} = req.params
 
-  const role = req.user.role
+  const {status,remark} = req.body
 
-  if(role !== "moderator"){
-     throw new ApiError(400,"You do not have Permission ")
-  }
-  if (!reportId || !status || !remark) {
-    throw new ApiError(400, "All fields are required");
+  if(!status || !remark){
+    throw new ApiError(400,"All Fields are required")
   }
 
-
-  const report = await Report.findById(reportId);
-  if (!report) {
-    throw new ApiError(404, "Invalid report Id");
+  if(!reportId){
+    throw new ApiError(400,"No id Provided")
   }
+ const report = await Report.findById(reportId);
 
-  report.moderatorVerificationStatus = status;
+if (!report) {
+  throw new ApiError(404, "Invalid report Id");
+}
 
-  if (status === "approved") {
-    report.moderatorApprovedCount += 1;
-  }
-
-  const moderatorVerify = await moderatorVerification.create({
-    reportId,
-    verifiedBy: req.user._id,
-    status,
-    remark,
-  });
-
-  if (!moderatorVerify) {
-    throw new ApiError(500, "Error while updating Status");
-  }
-
-  await report.save({ validateBeforeSave: false });
-
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      moderatorVerify,
-      "Status Updated Successfully"
-    )
-  );
+// 1️⃣ Push action into the array inside report
+report.moderatorVerifications.push({
+  verifiedBy: req.user._id,
+  status,
+  remark,
+  createdAt: new Date()
 });
+
+// 2️⃣ Compute counts
+const approvedCount = report.moderatorVerifications.filter(v => v.status === 'approved').length;
+const rejectedCount = report.moderatorVerifications.filter(v => v.status === 'rejected').length;
+
+// 3️⃣ Update summary fields
+if (approvedCount >= 1) report.moderatorVerificationStatus = 'approved';
+else if (rejectedCount === report.moderatorVerifications.length) report.moderatorVerificationStatus = 'rejected';
+else report.moderatorVerificationStatus = 'pending';
+
+report.moderatorApprovedCount = approvedCount;
+
+// 4️⃣ Create separate moderatorVerification record (for history)
+const moderatorVerify = await moderatorVerification.create({
+  reportId,
+  verifiedBy: req.user._id,
+  status,
+  remark,
+});
+
+if (!moderatorVerify) {
+  throw new ApiError(500, "Error while updating Status");
+}
+
+// 5️⃣ Save the report
+await report.save({ validateBeforeSave: false });
+
+return res.status(200).json(
+  new ApiResponse(200, moderatorVerify, "Status Updated Successfully")
+);
+})

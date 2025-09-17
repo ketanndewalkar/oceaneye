@@ -9,7 +9,7 @@ export const uploadReport = asyncHandler(async (req, res) => {
   try {
     const { title, description, userEnteredLocation, latitude, longitude } =
       req.body;
-
+   
     if (!title || !description || !latitude || !longitude) {
       throw new ApiError(401, "All fields are required");
     }
@@ -113,11 +113,7 @@ export const getReportById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, report, "Report for id fetched"));
 });
 
-// Need to design controller
-// 1. All pending Reports for moderator controller
-// 1. All pending Reports Status Update moderator controller
-// 2. All pending Reports Status Update official controller
-// 2. All pending Reports for moderator controller
+
 
 export const PendingReports = asyncHandler(async (req, res) => {
   // This controller is for all pending reports needs to be reviewed by moderators

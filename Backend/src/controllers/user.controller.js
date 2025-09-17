@@ -79,13 +79,16 @@ export const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).select("-password");
   const cookieOptions = {
     httpOnly: true,
+    sameSite : "none",
+    secure: false,
+    path : '/',
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     
   };
 
   return res
     .status(200)
-    .cookie("AccessToken", AccessToken, cookieOptions)
+    .cookie("token", AccessToken, cookieOptions)
     .json(new ApiResponse(200, user, "User logged In succesfully"));
 });
 

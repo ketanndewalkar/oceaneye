@@ -9,7 +9,8 @@ import Report from "../models/reports.models.js";
 
 
 export const isLoggedIn = asyncHandler(async(req,res,next) => {
-    const token = req.cookies.AccessToken
+    const {token} = req.cookies
+    console.log("token",token)
     console.log("In auth middleware")
     if (!token){
         return res.status(404).json(
@@ -35,6 +36,8 @@ export const validateValidatePermission = (roles=[]) => asyncHandler(async(req,r
     }
 
     const userRole = req.user.role
+    console.log(roles)
+    console.log(userRole)
     if(roles.length && !roles.includes(userRole)){  
         throw new ApiError(403,"You do not have permission to access this report")
     }
