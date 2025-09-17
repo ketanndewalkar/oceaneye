@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext.jsx";
 import { ClipLoader } from "react-spinners";
-
 // An icon component for the arrow in the "Sign in" link
 const ArrowRightIcon = () => (
   <svg
@@ -24,9 +23,19 @@ const ArrowRightIcon = () => (
 );
 
 // Reusable input field component
-const FormInput = ({ id, label, type = "text", placeholder, value, onChange }) => (
+const FormInput = ({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+}) => (
   <div className="mb-6">
-    <label htmlFor={id} className="block text-gray-700 text-sm font-semibold mb-2">
+    <label
+      htmlFor={id}
+      className="block text-gray-700 text-sm font-semibold mb-2"
+    >
       {label}
     </label>
     <input
@@ -52,7 +61,7 @@ export default function Signup() {
     password: "",
   });
   const [agreed, setAgreed] = useState(false);
-  const {login,loading,setLoading} = useContext(AuthContext);
+  const { login, loading, setLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,26 +74,27 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData)
+      console.log(formData);
       setLoading(true);
-      const res = await axios.post("http://localhost:4000/api/v1/users/register",formData);
-      if(res.status===201){
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/register",
+        formData
+      );
+      if (res.status === 201) {
         login(res.data.data);
         setLoading(false);
         toast(res.data.message);
         navigate("/");
-      }else{
+      } else {
         setLoading(false);
-        toast("status code:",res.status);
+        toast("status code:", res.status);
       }
     } catch (error) {
       setLoading(false);
-      console.log(err)
+      console.log(error);
     }
-    
-    
-
   };
+
 
   return (
     <div className="h-fit md:h-screen w-screen bg-gray-100 font-sans flex items-center justify-center">
@@ -103,17 +113,13 @@ export default function Signup() {
           {/* Right Side: Sign Up Form */}
           <div className="w-full md:w-1/3 md:rounded-l-3xl p-8 sm:p-12 flex flex-col justify-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-left">
-              {True?<ClipLoader
-        color={color}
-        loading={loading}
-        cssOverride={override}
-        size={150}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />:"Sign Up"}
+              Sign Up
             </h1>
 
-            <form onSubmit={handleSubmit} className="flex flex-col justify-center h-full">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col justify-center h-full"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-4">
                 <FormInput
                   id="firstName"
@@ -165,10 +171,17 @@ export default function Signup() {
               {/* Submit & Sign In */}
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <button
-                  type="submit"
-                  className="flex-grow sm:flex-grow-0 px-10 py-3 bg-gradient-to-br from-blue-600 to-blue-800 text-white font-bold rounded-full hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
+                  type={loading?"":"submit"}
+                  className="flex-grow sm:flex-grow-0 px-10 py-3 bg-gradient-to-br from-blue-600 to-blue-800 text-white font-bold rounded-full hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out flex justify-center items-center"
                 >
-                  Sign Up
+                  {loading? (
+                    <><ClipLoader
+                      color="white"
+                      size={20}
+                    /></>
+                  ) : (
+                    "Sign Up"
+                  )}
                 </button>
                 <Link
                   to="/login"
