@@ -14,6 +14,8 @@ export const uploadReport = asyncHandler(async (req, res) => {
       throw new ApiError(401, "All fields are required");
     }
 
+    
+
     if (!req.file) {
       throw new ApiError(404, "No Image found");
     }
@@ -145,4 +147,21 @@ export const officialReviewPending = asyncHandler(async(req,res) => {
   return res.status(200).json(
     new ApiResponse(200,reports,"All pending Reports Fetched Succesfully")
   )
+})
+
+// Approved Reports Controller 
+
+export const getApprovedReports = asyncHandler(async(req,res) => {
+   const reports = await Report.find({
+    reportVerificationStatus:"approved"
+   })
+
+   if(!reports){
+    throw new ApiError(404,"No reports found")
+   }
+
+   return res.status(200).json(
+    new ApiResponse(200,reports,"All reports fetched succesfully")
+   )
+
 })

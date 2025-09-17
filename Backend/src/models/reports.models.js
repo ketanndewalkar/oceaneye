@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const imageSchema = new mongoose.Schema(
   {
     url: {
@@ -19,13 +18,13 @@ const imageSchema = new mongoose.Schema(
       type: Object,
     },
     exif: {
-      make: String,     
-      model: String,    
-      dateTaken: Date,  
-      gpsLatitude: Number,  
-      gpsLongitude: Number, 
+      make: String,
+      model: String,
+      dateTaken: Date,
+      gpsLatitude: Number,
+      gpsLongitude: Number,
     },
-    
+
     uploadedAt: {
       type: Date,
       default: Date.now,
@@ -49,23 +48,22 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    moderatorVerificationStatus : {
+    moderatorVerificationStatus: {
       type: String,
-      enum : ["pending","approved","rejected","Information"],
-      default : "pending"
+      enum: ["pending", "approved", "rejected", "Information"],
+      default: "pending",
     },
-    moderatorApprovedCount : {
-      type:Number,
-      default:0
+    moderatorApprovedCount: {
+      type: Number,
+      default: 0,
     },
-    reportVerificationStatus:{
-      type:String,
-      enum: ["pending","approved","rejected"],
-      default: "pending"
+    reportVerificationStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
-    userEnteredLocation:{
-      type:String,
-      
+    userEnteredLocation: {
+      type: String,
     },
     images: [imageSchema],
   },

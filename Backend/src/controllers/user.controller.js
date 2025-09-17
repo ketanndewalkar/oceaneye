@@ -45,7 +45,13 @@ export const register = asyncHandler(async (req, res) => {
   user.emailVerificationExpiry = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
   const emailUrl = `${process.env.BASE_URL}/api/v1/users/verify-email/${emailVerificationToken}`;
-  await sendEmail({
+  
+  const registerUser = await User.findOne({ email }).select("-password");
+
+  res
+    .status(201)
+    .json(new ApiResponse(201, registerUser, "User registerd succesfully"));
+    await sendEmail({
     email: user.email,
     subject: "Please verify your email",
     mailgenContent: emailVerificationMailgenContent(
@@ -53,11 +59,6 @@ export const register = asyncHandler(async (req, res) => {
       `${emailUrl}`
     ),
   });
-  const registerUser = await User.findOne({ email }).select("-password");
-
-  return res
-    .status(201)
-    .json(new ApiResponse(201, registerUser, "User registerd succesfully"));
 });
 
 export const login = asyncHandler(async (req, res) => {
