@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext.jsx";
+import { ClipLoader } from "react-spinners";
 
 // An icon component for the arrow in the "Sign in" link
 const ArrowRightIcon = () => (
@@ -51,7 +52,7 @@ export default function Signup() {
     password: "",
   });
   const [agreed, setAgreed] = useState(false);
-  const {login} = useContext(AuthContext);
+  const {login,loading,setLoading} = useContext(AuthContext);
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,15 +66,19 @@ export default function Signup() {
     e.preventDefault();
     try {
       console.log(formData)
+      setLoading(true);
       const res = await axios.post("http://localhost:4000/api/v1/users/register",formData);
       if(res.status===201){
         login(res.data.data);
+        setLoading(false);
         toast(res.data.message);
         navigate("/");
       }else{
+        setLoading(false);
         toast("status code:",res.status);
       }
     } catch (error) {
+      setLoading(false);
       console.log(err)
     }
     
@@ -98,7 +103,14 @@ export default function Signup() {
           {/* Right Side: Sign Up Form */}
           <div className="w-full md:w-1/3 md:rounded-l-3xl p-8 sm:p-12 flex flex-col justify-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-left">
-              Sign Up
+              {True?<ClipLoader
+        color={color}
+        loading={loading}
+        cssOverride={override}
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />:"Sign Up"}
             </h1>
 
             <form onSubmit={handleSubmit} className="flex flex-col justify-center h-full">

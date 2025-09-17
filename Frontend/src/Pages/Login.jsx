@@ -3,6 +3,8 @@ import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../Context/AuthContext';
+import { set } from 'mongoose';
+import { ClipLoader } from "react-spinners";
 
 // Reusable Arrow Icon Component
 const ArrowRightIcon = () => (
@@ -41,26 +43,30 @@ export default function Login() {
     email: '',
     password: '',
   });
-  const {login} = useContext(AuthContext);
+  const {login,loading,setLoading} = useContext(AuthContext);
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       console.log(formData);
+      setLoading(true); 
       const res = await axios.post("http://localhost:4000/api/v1/users/login",formData);
       if(res.status===200){
         login(res.data.data);
+        setLoading(false);
         toast(res.data.message);
         navigate("/");
       }else{
+        setLoading(false);
         toast("status code:",res.status);
       }
     } catch (error) {
+      setLoading(false); 
       console.log(err)
     }
   };
@@ -123,7 +129,14 @@ export default function Login() {
                 type="submit"
                 className="flex-grow sm:flex-grow-0 px-10 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-full hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
               >
-                Login
+                {/* {loading?<ClipLoader
+        
+        loading={loading}
+        cssOverride={override}
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />:"Login"} */}
               </button>
               <Link 
                 to="/signup" 
