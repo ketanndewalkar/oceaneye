@@ -28,6 +28,6 @@ const hotspotSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const Hotspot = mongoose.model("Hotspot", hotspotSchema);
 
-
-export default mongoose.model("Hotspot", hotspotSchema);
+export default Hotspot;
