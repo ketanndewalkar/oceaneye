@@ -83,10 +83,9 @@ export default function Signup() {
         }
       );
       if (res.status === 201) {
-        login(res.data.data);
         setLoading(false);
         toast(res.data.message);
-        navigate("/");
+        navigate("/login");
       } else {
         setLoading(false);
         toast("status code:", res.status);

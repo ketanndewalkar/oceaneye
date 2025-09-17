@@ -35,7 +35,7 @@ export const register = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Issue while registering");
   }
   const emailVerificationToken = crypto.randomBytes(32).toString("hex");
-  console.log(emailVerificationToken);
+  
   const hashedToken = crypto
     .createHash("sha256")
     .update(emailVerificationToken)

@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import axios from "axios";
-
+import { AuthContext } from "../Context/AuthContext";
+import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 const ReportIncident = () => {
-  const [title, setTitle] = useState(""); // was hazardType
+  const { loading, setLoading } = useContext(AuthContext);
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [mediaFiles, setMediaFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null); // single file instead of array
   const [enableLocation, setEnableLocation] = useState(false);
-  const [userEnteredLocation, setUserEnteredLocation] = useState(""); // was address
+  const [userEnteredLocation, setUserEnteredLocation] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [geolocationError, setGeolocationError] = useState("");
-
-  const handleMediaChange = (e) => {
-    setMediaFiles(Array.from(e.target.files));
+  const imageRef = useRef(null);
+  // 🔹 File input handler
+  const handle_file_input = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
   const handleEnableLocationChange = (checked) => {
@@ -62,7 +68,11 @@ const ReportIncident = () => {
         return;
       }
     } else {
-      if (!userEnteredLocation.trim() && !latitude.trim() && !longitude.trim()) {
+      if (
+        !userEnteredLocation.trim() &&
+        !latitude.trim() &&
+        !longitude.trim()
+      ) {
         alert(
           "Please provide either manual location (address, latitude, and longitude) or enable device location."
         );
@@ -79,25 +89,30 @@ const ReportIncident = () => {
     formData.append("latitude", latitude);
     formData.append("longitude", longitude);
 
-    // Append media files
-    mediaFiles.forEach((file) => {
-      formData.append("image", file);
-    });
+    // Append single file
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
 
     try {
-      const response = await axios.post( 'http://localhost:4000/api/v1/reports/upload-report', formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      });
-
-      console.log(response.data);
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/reports/upload-report",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+      toast(response.data.message);
+      setLoading(false);
 
       // Reset form after success
       setTitle("");
       setDescription("");
-      setMediaFiles([]);
+      setSelectedFile(null);
       setEnableLocation(false);
       setUserEnteredLocation("");
       setLatitude("");
@@ -129,59 +144,14 @@ const ReportIncident = () => {
             </p>
             <div className="bg-[#00aaff18] h-full border p-[1vw] border-gray-300 rounded-lg flex flex-col gap-[0.5vw] shadow-xl shadow-black/10">
               <h1 className="text-[1.5vw] text-[#1a365d] font-bold">
-                Preview Image :{" "}
+                Preview File :{" "}
               </h1>
-              <div className="w-fit border border-gray-200 rounded-lg overflow-auto p-[1vw] flex flex-wrap gap-4 max-h-[80%]">
-                {mediaFiles.length === 0 && (
-                  <img
-                    src="https://picsum.photos/600/300/"
-                    className="size-full object-center object-contain rounded-lg"
-                    alt="Default preview"
-                  />
-                )}
-
-                {mediaFiles.map((file, idx) => {
-                  const url = URL.createObjectURL(file);
-                  const type = file.type;
-
-                  if (type.startsWith("image/")) {
-                    return (
-                      <img
-                        key={idx}
-                        src={url}
-                        alt={`preview-${idx}`}
-                        className="size-full rounded-lg object-contain object-center"
-                        onLoad={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else if (type.startsWith("video/")) {
-                    return (
-                      <video
-                        key={idx}
-                        src={url}
-                        controls
-                        className="size-full rounded-lg"
-                        onLoadedData={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else if (type.startsWith("audio/")) {
-                    return (
-                      <audio
-                        key={idx}
-                        src={url}
-                        controls
-                        className="size-full"
-                        onLoadedData={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else {
-                    return (
-                      <p key={idx} className="text-sm text-gray-500">
-                        Unsupported file: {file.name}
-                      </p>
-                    );
-                  }
-                })}
+              <div className="w-fit border border-gray-200 rounded-lg bg-white overflow-auto p-[1vw] flex flex-wrap gap-4 max-h-[80%]">
+                <img
+                  src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQA6AMBIgACEQEDEQH/xAAaAAEAAwEBAQAAAAAAAAAAAAAAAwQFAQIH/8QAMxABAAEDAQQHBgYDAAAAAAAAAAECAxEEFCExURI0QVJxkaEzU2FicvAiIzJCgcETQ7H/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A+zgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACtc1cUVTTFEzMT4Iq9bV+2mmPEF4Z06i7XwqmPpIt3rk8K58QXqr1un9VcQjnV2o4ZmfgrxpLs8cR/KSnR87nlAFes5UT/ACjnV3Z4Yp8IWadLbjjmfGUkWrccKKY/gGdN29Xv6dePJNoavzJp5xlcqp6VMxzhn6T8Ooppnt3ZBogAAAAAAAAAAAAAAAAAAAz9bGL0zz3rdqza6FNUURvjjKvr4/FRPOMJ9JV0rFMcgLl23ZqiJjGY/bDztlrnV5Itf7SnwLelpqtxXNcxkE22Wvj5ObZa+byeNko976Q5Oko976QCTbLXzeRtlr5vJHslHvZ9DZKPez6Al2yz83kpxXEXulG6M53p9ko97PobJRP+2fQEu12vm8iNVbndGfJHGjp7Lkz5K009G70eOKoBqBAAAAAAAAAAAAAAAAACvrqc2oq7suaCc25p5Sl1FPSs1R8MquhnFdVPOMg9a/2lPg7V1GHNf7Snwdr6jH32grWrc3K8RujtlPe0k00Zpq6WOOe1HpbsWq81cJjErV7U2+hPRmKpmN0AzwkAF3TaeOj0q4zngh1Nj/HVmn9H/Ad0XtZ8Hi71mr6/7e9F7afpeLvWavr/ALBpRwCOAAAAAAAAAAAAAAAAADlUZiYntZ2mzTqKYnwlpdrNufgvz8Ksgl1/tKfB6r6jH32vOunNynweq+ox99oKZGU9jTVXd87qec9qxXpKJpxT+GY7QUFvR2Jn8yuN37YLOlq6ebuMRwjmufeAOPFyumKqejPCXQFWxaqt6iYmN2JxKvd6zV9f9tJm3Os1fWDSjgEcAAAAAAAAAAAAAAAAABQ1sYv55wvob1iLtUTM4iIxwBTu3P8AJNG7GIwu2KYq09EVRlU1NqLU000TM7nim9cppiKapiPAGmM7aL3ek2i93pBojO2i93pNovd6QaIztovd6TaL3ekGizbvWavrNpvd7d4PEdKq5EznMzkGrHAAAAAAAAAAAAAAAAAAAACYieMQ5iOXo6A5iOXoYjl6OgOYjl6GI5ejoDmI5ehiOXo6A5iOXoREcvR0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//9k="
+                  className="size-full object-center object-contain rounded-lg"
+                  alt="Default preview"
+                />
               </div>
             </div>
           </div>
@@ -250,20 +220,19 @@ const ReportIncident = () => {
                     htmlFor="media"
                     className="block text-[1.2vw] font-medium text-[#1a365d] mb-2"
                   >
-                    Upload media (images, video) :{" "}
+                    Upload media (image, video, audio) :{" "}
                   </label>
                   <input
                     id="media"
                     name="image"
                     type="file"
                     accept="image/*,video/*,audio/*"
-                    multiple
-                    onChange={handleMediaChange}
+                    onChange={handle_file_input}
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#72cefcb3] file:text-[#2995ca] hover:file:bg-blue-100"
                   />
-                  {mediaFiles.length > 0 && (
+                  {selectedFile && (
                     <p className="mt-2 text-sm text-gray-500">
-                      {mediaFiles.length} file(s) selected
+                      Selected file: {selectedFile.name}
                     </p>
                   )}
                 </div>
@@ -285,7 +254,8 @@ const ReportIncident = () => {
                     htmlFor="enableLocation"
                     className="text-gray-600 text-sm text-[1vw] font-bold"
                   >
-                    Enable device location (use browser geolocation if available)
+                    Enable device location (use browser geolocation if
+                    available)
                   </label>
                 </div>
                 {geolocationError && (
@@ -365,10 +335,16 @@ const ReportIncident = () => {
                 {/* Submit Button */}
                 <div className="pt-2">
                   <button
-                    type="submit"
+                    type={loading ? "" : "submit"}
                     className="inline-block text-[1.2vw] px-[1vw] py-[0.5vw] bg-[#389bcd] text-white font-semibold rounded-md shadow-sm hover:bg-[#12648d] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#389bcd]"
                   >
-                    Submit Report
+                    {loading ? (
+                      <>
+                        <ClipLoader color="white" size={20} />
+                      </>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </form>
