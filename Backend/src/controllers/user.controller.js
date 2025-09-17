@@ -45,13 +45,13 @@ export const register = asyncHandler(async (req, res) => {
   user.emailVerificationExpiry = Date.now() + 10 * 60 * 1000;
   await user.save({ validateBeforeSave: false });
   const emailUrl = `${process.env.BASE_URL}/api/v1/users/verify-email/${emailVerificationToken}`;
-  
+
   const registerUser = await User.findOne({ email }).select("-password");
 
   res
     .status(201)
     .json(new ApiResponse(201, registerUser, "User registerd succesfully"));
-    await sendEmail({
+  await sendEmail({
     email: user.email,
     subject: "Please verify your email",
     mailgenContent: emailVerificationMailgenContent(
@@ -79,8 +79,10 @@ export const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).select("-password");
   const cookieOptions = {
     httpOnly: true,
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    secure: false, // true in production with HTTPS
+    sameSite: "lax",
+    path: "/",
   };
 
   return res

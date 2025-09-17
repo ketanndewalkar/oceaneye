@@ -10,6 +10,7 @@ import Report from "../models/reports.models.js";
 
 export const isLoggedIn = asyncHandler(async(req,res,next) => {
     const token = req.cookies.AccessToken
+    console.log(req.cookies.AccessToken)
     console.log("In auth middleware")
     if (!token){
         return res.status(404).json(
