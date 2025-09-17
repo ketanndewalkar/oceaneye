@@ -85,13 +85,14 @@ const ReportIncident = () => {
     });
 
     try {
-      const response = await fetch("http://localhost:4000/api/v1/reports/upload-report", {
-        method: "POST",
-        body: formData, // No headers needed, browser sets Content-Type with boundary
-        credentials: "include", // 👈 important
+      const response = await axios.post( 'http://localhost:4000/api/v1/reports/upload-report', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
       });
 
-      console.log(await response.json());
+      console.log(response.data);
 
       // Reset form after success
       setTitle("");

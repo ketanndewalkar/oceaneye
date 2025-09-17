@@ -78,7 +78,9 @@ export default function Signup() {
       setLoading(true);
       const res = await axios.post(
         "http://localhost:4000/api/v1/users/register",
-        formData
+        formData,{
+          withCredentials: true,
+        }
       );
       if (res.status === 201) {
         login(res.data.data);
