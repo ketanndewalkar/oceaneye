@@ -1,9 +1,8 @@
-import axios from 'axios';
-import React, { useContext, useState } from 'react';
-import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router';
-import { AuthContext } from '../Context/AuthContext';
-import { set } from 'mongoose';
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router";
+import { AuthContext } from "../Context/AuthContext";
 import { ClipLoader } from "react-spinners";
 
 // Reusable Arrow Icon Component
@@ -26,7 +25,10 @@ const ArrowRightIcon = () => (
 // Reusable Form Input Component
 const FormInput = ({ id, label, ...props }) => (
   <div className="mb-6">
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
       {label}
     </label>
     <input
@@ -40,10 +42,10 @@ const FormInput = ({ id, label, ...props }) => (
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  const {login,loading,setLoading} = useContext(AuthContext);
+  const { login, loading, setLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -54,20 +56,23 @@ export default function Login() {
     e.preventDefault();
     try {
       console.log(formData);
-      setLoading(true); 
-      const res = await axios.post("http://localhost:4000/api/v1/users/login",formData);
-      if(res.status===200){
+      setLoading(true);
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/login",
+        formData
+      );
+      if (res.status === 200) {
         login(res.data.data);
         setLoading(false);
         toast(res.data.message);
         navigate("/");
-      }else{
+      } else {
         setLoading(false);
-        toast("status code:",res.status);
+        toast("status code:", res.status);
       }
     } catch (error) {
-      setLoading(false); 
-      console.log(err)
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -89,25 +94,25 @@ export default function Login() {
           <h1 className="text-3xl sm:text-4xl font-bold text-blue-800 mb-8 text-left">
             Login
           </h1>
-          
+
           <form onSubmit={handleSubmit}>
-            <FormInput 
-              id="email" 
-              type="email" 
-              label="Email" 
-              placeholder="Email address..." 
-              value={formData.email} 
-              onChange={handleInputChange} 
-            />
-            <FormInput 
-              id="password" 
-              type="password" 
-              label="Password" 
-              placeholder="********" 
-              value={formData.password} 
+            <FormInput
+              id="email"
+              type="email"
+              label="Email"
+              placeholder="Email address..."
+              value={formData.email}
               onChange={handleInputChange}
             />
-            
+            <FormInput
+              id="password"
+              type="password"
+              label="Password"
+              placeholder="********"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+
             <div className="flex items-center justify-between mb-6 text-sm">
               <div className="flex items-center">
                 <input
@@ -119,7 +124,10 @@ export default function Login() {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <a
+                href="#"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Forgot password?
               </a>
             </div>
@@ -129,17 +137,17 @@ export default function Login() {
                 type="submit"
                 className="flex-grow sm:flex-grow-0 px-10 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold rounded-full hover:shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
               >
-                {/* {loading?<ClipLoader
-        
-        loading={loading}
-        cssOverride={override}
-        size={150}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />:"Login"} */}
+                {loading ? (
+                  <ClipLoader
+                    color="white"
+                    size={20}
+                  />
+                ) : (
+                  "Login"
+                )}
               </button>
-              <Link 
-                to="/signup" 
+              <Link
+                to="/signup"
                 className="font-semibold text-gray-600 hover:text-blue-700 transition-colors duration-300"
               >
                 Sign Up <ArrowRightIcon />
