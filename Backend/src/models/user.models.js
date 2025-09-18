@@ -33,9 +33,26 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["citizens", "officials", "analysts"],
-      default: "citizens",
+      enum: ["citizen", "official", "analyst","moderators","admin"],
+      default: "citizen",
     },
+    forgotPasswordToken : {
+      type: String
+    },
+    forgotPasswordExpiry :{
+      type: Date
+    },
+    isEmailVerified : {
+      type: Boolean,
+      default: false
+    },
+    emailVerificationToken : {
+      type:String
+    },
+    emailVerificationExpiry : {
+      type: Date
+    },
+    
   },
   { timestamps: true }
 );

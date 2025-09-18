@@ -11,4 +11,22 @@ const connectdb = async() => {
         process.exit(1)
     }
 }
+// Global toJSON plugin to format createdAt and updatedAt(Indian Standard Time) in all schemas
+mongoose.plugin((schema) => {
+  schema.set("toJSON", {
+    transform: (doc, ret) => {
+      if (ret.createdAt) {
+        ret.createdAt = new Date(ret.createdAt).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+        });
+      }
+      if (ret.updatedAt) {
+        ret.updatedAt = new Date(ret.updatedAt).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+        });
+      }
+      return ret;
+    },
+  });
+});
 export default connectdb
