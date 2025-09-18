@@ -53,6 +53,15 @@ const reportSchema = new mongoose.Schema(
       enum: ["pending", "approved", "rejected", "Information"],
       default: "pending",
     },
+    moderatorVerifications: [
+      {
+        verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        status: { type: String, enum: ["approved", "rejected","Information"] },
+        remark: String,
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+
     moderatorApprovedCount: {
       type: Number,
       default: 0,
