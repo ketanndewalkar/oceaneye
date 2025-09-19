@@ -85,10 +85,6 @@ export const login = asyncHandler(async (req, res) => {
     sameSite: "lax",
     path: "/",
 
-    sameSite : "none",
-    secure: false,
-    path : '/',
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     
 
   };
