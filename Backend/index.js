@@ -10,6 +10,7 @@ import userRoutes from "./src/routes/user.routes.js";
 import reportRoutes from "./src/routes/reports.routes.js";
 import validateRoutes from "./src/routes/validate.routes.js";
 import adminRoutes from "./src/routes/admin.routes.js";
+import hotspotRoutes from "./src/routes/hotspot.routes.js"
 
 const app = express();
 dotenv.config();
@@ -30,6 +31,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/reports", reportRoutes);
 app.use("/api/v1/validate", validateRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use('/api/v1/hotspot',hotspotRoutes)
 
 connectdb()
   .then(() => {

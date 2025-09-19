@@ -9,7 +9,7 @@ export const uploadReport = asyncHandler(async (req, res) => {
   try {
     const { title, description, userEnteredLocation, latitude, longitude } =
       req.body;
-   
+    console.log(userEnteredLocation)
     if (!title || !description || !latitude || !longitude) {
       throw new ApiError(401, "All fields are required");
     }
@@ -69,10 +69,10 @@ export const uploadReport = asyncHandler(async (req, res) => {
           latitude: BrowserLatitude,
           longitude: BrowserLongitude,
           location,
-          userEnteredLocation,
           exif: exifData,
         },
       ],
+      userEnteredLocation
     });
 
     if (!report) {

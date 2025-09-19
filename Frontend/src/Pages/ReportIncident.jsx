@@ -1,5 +1,7 @@
+
 import React, { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const ReportIncident = () => {
   const [title, setTitle] = useState("");
@@ -45,7 +47,7 @@ const ReportIncident = () => {
     }
   };
 
-  // ✅ form submit
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,6 +93,7 @@ const ReportIncident = () => {
           withCredentials: true,
         }
       );
+      toast(response.data.message);
 
       console.log("Upload response:", response.data);
       setResponseData(response.data.data);
