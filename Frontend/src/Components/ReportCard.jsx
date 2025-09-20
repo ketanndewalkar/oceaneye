@@ -1,15 +1,39 @@
+import { useEffect, useState } from "react";
+
 const ReportCard = ({ report }) => {
+  console.log(report);
+  const [dateandtime, setdateandtime] = useState("");
+  function extractDateTime(isoString) {
+    const dateObj = new Date(isoString);
+
+    // Extract date in YYYY-MM-DD
+    const date = dateObj.toISOString().split("T")[0];
+
+    // Extract time in H:MM:SS AM/PM (local time)
+    const time = dateObj.toLocaleTimeString("en-US", {
+      hour: "numeric", // no leading zero
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // AM/PM format
+    });
+
+    return { date, time };
+  }
+  useEffect(()=>{
+    const ext = extractDateTime(report.images[0].uploadedAt);
+    setdateandtime(`${ext.date}\t\t${ext.time}`)
+  },[])
   return (
     <div className="relative flex flex-col bg-white shadow-md border border-slate-200 rounded-xl w-full hover:shadow-lg transition cursor-pointer hover:scale-103 duration-300">
       <div className="relative h-48 overflow-hidden rounded-t-xl">
         <img
-          src={report.image}
+          src={report.images[0].url}
           alt={report.title}
           className="h-full w-full object-cover"
         />
         <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-3 py-1 rounded-md shadow-md flex flex-col items-start">
-          <span>Lat: {report.latitude}</span>
-          <span>Lng: {report.longitude}</span>
+          <span>Lat: {report.images[0].latitude}</span>
+          <span>Lng: {report.images[0].longitude}</span>
         </div>
       </div>
 
@@ -31,10 +55,10 @@ const ReportCard = ({ report }) => {
               clipRule="evenodd"
             />
           </svg>
-          {report.location}
+          {report.images[0].location.city}
         </div>
 
-        <div className="text-xs text-slate-400">{report.createdAt}</div>
+        <div className="text-xs text-slate-400">{dateandtime}</div>
       </div>
     </div>
   );

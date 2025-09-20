@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ReportCardMod = ({ report }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,20 +10,22 @@ const ReportCardMod = ({ report }) => {
     console.log("Form Submitted:", { status, remark, reportId: report.id });
     setIsOpen(false); // Close modal after submit
   };
-
+  useEffect(()=>{
+    console.log(report)
+  })
   return (
     <>
       {/* Card */}
       <div className="relative flex flex-col bg-white shadow-md border border-slate-200 rounded-xl w-full hover:shadow-lg transition cursor-pointer hover:scale-103 duration-300">
         <div className="relative h-48 overflow-hidden rounded-t-xl">
           <img
-            src={report.image}
+            src={report.images[0].url}
             alt={report.title}
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-3 py-1 rounded-md shadow-md flex flex-col items-start">
-            <span>Lat: {report.latitude}</span>
-            <span>Lng: {report.longitude}</span>
+            <span>Lat: {report.images[0].latitude}</span>
+            <span>Lng: {report.images[0].longitude}</span>
           </div>
         </div>
 
@@ -50,7 +52,7 @@ const ReportCardMod = ({ report }) => {
             {report.location}
           </div>
 
-          <div className="text-xs text-slate-400">{report.createdAt}</div>
+          <div className="text-xs text-slate-400">{report.images[0].uploadedAt}</div>
 
           <div className="flex flex-wrap md:flex-nowrap justify-between items-center gap-3">
             {/* Button */}
@@ -62,8 +64,8 @@ const ReportCardMod = ({ report }) => {
             </button>
 
             {/* Status Badge */}
-            <span className="rounded-full flex items-center justify-center px-3 py-1 bg-[#0f9] border border-gray-300 text-gray-700 text-xs sm:text-sm font-medium">
-              Verified Reports
+            <span className="rounded-full flex items-center justify-center px-4 py-2 bg-[#ff2a00ce] border border-gray-300 text-white text-xs sm:text-sm font-medium">
+              {report.moderatorVerificationStatus}
             </span>
           </div>
         </div>
