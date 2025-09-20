@@ -4,7 +4,7 @@ import AppLayout from "./Components/AppLayout";
 import Home from "./Pages/Home";
 import ReportIncident from "./Pages/ReportIncident";
 import LiveAlerts from "./Pages/LiveAlerts";
-import About from "./Pages/About";
+import About from "./Pages/AllReports";
 import Contact from "./Pages/Contact";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
@@ -12,15 +12,17 @@ import Hero2 from "./Pages/Home2";
 import Hero3 from "./Pages/Hero3";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import AllReports from "./Pages/AllReports";
+import ModeratorDashboard from "./Pages/ModeratorDashboard";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <>
-        {/* <ProtectedRoute> */}
+        <ProtectedRoute>
           <AppLayout />
-        {/* </ProtectedRoute> */}
+        </ProtectedRoute>
       </>
     ),
     children: [
@@ -54,7 +56,7 @@ const router = createBrowserRouter([
         path: "/viewReports",
         element: (
           <>
-            <About />
+            <AllReports />
           </>
         ),
       },
@@ -66,6 +68,13 @@ const router = createBrowserRouter([
           </>
         ),
       },
+      {
+        path:"/about",
+        element:<></>
+      },{
+        path:"/moderator-dashboard",
+        element:<><ModeratorDashboard /></>
+      }
     ],
   },
   {

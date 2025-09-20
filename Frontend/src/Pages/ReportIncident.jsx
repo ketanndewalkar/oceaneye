@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Card from "../Components/ReportCard";
 
 const ReportIncident = () => {
   const [title, setTitle] = useState("");
