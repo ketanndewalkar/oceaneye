@@ -3,14 +3,23 @@ import { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  let [loading, setLoading] = useState(false);
-  const [status, setstatus] = useState(200);
-  const [user, setUser] = useState(localStorage.getItem("user") || null);
-  
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(200);
+
+  // ✅ Parse from localStorage, default to null
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    try {
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("user",JSON.stringify(user));
+
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
@@ -28,10 +37,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading ,setLoading, login, logout ,setUser ,status , setstatus }}>
+    <AuthContext.Provider
+      value={{ user, loading, setLoading, login, logout, setUser, status, setStatus }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
 // Custom hook to use AuthContext
+export const useAuth = () => useContext(AuthContext);
