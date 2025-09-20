@@ -5,7 +5,10 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(200);
-
+  const roleBasedRoutes = {
+    "moderators":"/moderator-dashboard",
+    "official":"/official-dashboard"
+  }
   // ✅ Parse from localStorage, default to null
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -38,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, setLoading, login, logout, setUser, status, setStatus }}
+      value={{ user, loading,roleBasedRoutes, setLoading, login, logout, setUser, status, setStatus }}
     >
       {children}
     </AuthContext.Provider>

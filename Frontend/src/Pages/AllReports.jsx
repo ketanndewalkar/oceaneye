@@ -9,6 +9,7 @@ const AllReports = () => {
       "http://localhost:4000/api/v1/reports/get-approved-reports",
       { withCredentials: true }
     );
+    console.log(res.data.data)
     setreports(res.data.data);
   }
   useEffect(() => {

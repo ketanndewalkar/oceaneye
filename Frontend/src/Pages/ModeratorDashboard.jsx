@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReportCardMod from "../Components/ReportCardMod";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Context/AuthContext";
 
 const ModeratorDashboard = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [reports, setReports] = useState([]);
-  const getReports = async () =>{
-    const res = await axios.get("http://localhost:4000/api/v1/reports/get-pending-reports",{
-      withCredentials:true
-    });
-    setReports(res.data.data)
-  }
+  const getReports = async () => {
+    const res = await axios.get(
+      "http://localhost:4000/api/v1/reports/get-pending-reports",
+      {
+        withCredentials: true,
+      }
+    );
+    setReports(res.data.data);
+  };
 
-  useEffect(()=>{
-    getReports();
-  },[])
+  useEffect(() => {
+    if (user.role == "citizen" || user.role == "officials") {
+      navigate("/");
+    } else {
+      getReports();
+    }
+  }, []);
 
   return (
     <>

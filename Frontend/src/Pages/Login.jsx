@@ -116,24 +116,8 @@ export default function Login() {
               onChange={handleInputChange}
             />
 
-            <div className="flex items-center justify-between mb-6 text-sm">
-              <div className="flex items-center">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember" className="ml-2 block text-gray-900">
-                  Remember me
-                </label>
-              </div>
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Forgot password?
-              </a>
-            </div>
+            
+              
 
             <div className="flex items-center justify-between flex-wrap gap-4">
               <button

@@ -14,6 +14,7 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import AllReports from "./Pages/AllReports";
 import ModeratorDashboard from "./Pages/ModeratorDashboard";
+import OfficialDashboard from "./Pages/OfficialDashboard";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,9 @@ const router = createBrowserRouter([
       },{
         path:"/moderator-dashboard",
         element:<><ModeratorDashboard /></>
+      },{
+        path:"/official-dashboard",
+        element:<><OfficialDashboard/></>
       }
     ],
   },

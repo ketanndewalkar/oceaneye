@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../Context/AuthContext';
+import { Link } from 'react-router';
 
 const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const {user,logout} = useContext(AuthContext);
+  const {user,logout,roleBasedRoutes} = useContext(AuthContext);
   // Toggle dropdown visibility
   const toggleDropdown = () => setIsOpen(!isOpen);
   
@@ -43,12 +44,17 @@ const ProfileDropdown = () => {
           </div>
           
           {/* Role Display */}
-          <div className="px-4 py-2 hover:bg-gray-50 cursor-default">
+          {user.role!=="citizen"?<div className="px-4 py-2 hover:bg-gray-50 cursor-default">
+            <Link Link to={roleBasedRoutes[user.role]} className="flex items-center">
+              <ShieldIcon className="w-4 h-4 mr-2 text-[#0df]" />
+              <span className="text-sm font-medium text-nowrap">{`${user.role.charAt(0).toUpperCase()}${user.role.slice(1)} Dashboard`}</span>
+            </Link>
+          </div>:<div className="px-4 py-2 hover:bg-gray-50 cursor-default">
             <div className="flex items-center">
               <ShieldIcon className="w-4 h-4 mr-2 text-[#0df]" />
               <span className="text-sm font-medium">{`${user.role.charAt(0).toUpperCase()}${user.role.slice(1)}`}</span>
             </div>
-          </div>
+          </div>}
           
           {/* Additional Info Items */}
           {/* {user.additionalInfo?.map((info, index) => (
