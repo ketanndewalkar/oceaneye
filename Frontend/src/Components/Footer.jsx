@@ -3,30 +3,21 @@ import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 const defaultSections = [
   {
-    title: "Product",
+    title: "Quick Links",
     links: [
-      { name: "Overview", href: "#" },
-      { name: "Pricing", href: "#" },
-      { name: "Marketplace", href: "#" },
-      { name: "Features", href: "#" },
+      { name: "Home", href: "/" },
+      { name: "Live Alerts", href: "/liveAlerts" },
+      { name: "Report Incident", href: "/reportIncident" },
+      { name: "View Reports", href: "/viewReports" },
     ],
   },
   {
-    title: "Company",
+    title: "Government Support Links",
     links: [
-      { name: "About", href: "#" },
-      { name: "Team", href: "#" },
-      { name: "Blog", href: "#" },
-      { name: "Careers", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { name: "Help", href: "#" },
-      { name: "Sales", href: "#" },
-      { name: "Advertise", href: "#" },
-      { name: "Privacy", href: "#" },
+      { name: "INCOIS", href: "https://incois.gov.in/" },
+      { name: "NDMA", href: "https://ndma.gov.in/" },
+      { name: "MoES", href: "https://www.moes.gov.in/" },
+      { name: "SACHET", href: "https://sachet.ndma.gov.in/" },
     ],
   },
 ];
@@ -51,7 +42,7 @@ const Footer = ({
     title: "",
   },
   sections = defaultSections,
-  description = "A collection of components for your startup business or side project.",
+  description = "Be the Change. Report for your Nation",
   socialLinks = defaultSocialLinks,
   copyright = "© 2025 OceanEye. All rights reserved.",
   legalLinks = defaultLegalLinks,
@@ -73,7 +64,7 @@ const Footer = ({
               </a>
               <h2 className="text-xl font-semibold">{logo.title}</h2>
             </div>
-            <p className="text-muted-foreground max-w-[70%] text-sm">
+            <p className="text-muted-foreground max-w-[70%] text-xl font-bold bg-clip-text bg-gradient-to-r animate-pulse">
               {description}
             </p>
             <ul className="text-muted-foreground flex items-center space-x-6">
@@ -86,11 +77,11 @@ const Footer = ({
               ))}
             </ul>
           </div>
-          <div className="grid w-full gap-6 md:grid-cols-3 lg:gap-20">
+          <div className="grid w-full gap-6 md:grid-cols-2 lg:gap-20">
             {sections.map((section, sectionIdx) => (
               <div key={sectionIdx}>
                 <h3 className="mb-4 font-bold">{section.title}</h3>
-                <ul className="text-muted-foreground space-y-3 text-sm">
+                <ul className="text-muted-foreground space-y-3 text-sm ">
                   {section.links.map((link, linkIdx) => (
                     <li
                       key={linkIdx}

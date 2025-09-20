@@ -13,7 +13,7 @@ const Home2 = () => {
         </p>
       </div>
       <div className="flex gap-[3vw] hero22 md:flex-row flex-col justify-center items-center home22">
-        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw] flex flex-col gap-[0.2vw] justify-between home221">
+        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw] transition-all duration-300 ease-linear hover:scale-105 cursor-pointer flex flex-col gap-[0.2vw] justify-between home221">
           <div className="h-[1/3] home2211">
             <div className="w-fit p-[0.6vw] rounded-2xl bg-[#389bcd3c] home22111">
               <HiCamera className="text-[2.8vw] text-[#389bcd] icons" />
@@ -28,7 +28,7 @@ const Home2 = () => {
             GPS-enabled reporting system for instant documentation.
           </p>
         </div>
-        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw]  flex flex-col gap-[0.2vw] justify-between home221">
+        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw] transition-all duration-300 ease-linear hover:scale-105 cursor-pointer flex flex-col gap-[0.2vw] justify-between home221">
           <div className="h-[1/3] home2211">
             <div className="w-fit p-[0.6vw] rounded-2xl bg-[#389bcd3c] home22111">
               <TbSend className="text-[2.8vw] text-[#389bcd] icons" />
@@ -42,7 +42,7 @@ const Home2 = () => {
             instantly transmitted to local authorities and our community network
           </p>
         </div>
-        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw]  flex flex-col gap-[0.2vw] justify-between home221">
+        <div className="size-[22vw] border-1 border-gray-200 rounded-3xl shadow-2xl shadow-black/30 p-[2vw] transition-all duration-300 ease-linear hover:scale-105 cursor-pointer flex flex-col gap-[0.2vw] justify-between home221">
           <div className="h-[1/3] home2211">
             <div className="w-fit p-[0.5vw] rounded-2xl bg-[#389bcd3c] home22111">
               <MdOutlineSecurity className="text-[3vw] text-[#389bcd] icons" />

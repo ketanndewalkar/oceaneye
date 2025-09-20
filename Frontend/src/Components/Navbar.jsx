@@ -54,19 +54,12 @@ const Navbar = () => {
                 View Reports
               </Link>
             </li>
-            <li>
-              <Link
-                to="/contact"
-                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
-              >
-                Contact
-              </Link>
-            </li>
+           
             {!user ? (
               <li>
                 <Link
                   to="/signup"
-                  className="px-[2vw] py-[0.5vw] rounded-lg text-white bg-[#389bcd] transition-all duration-200 ease-linear hover:scale-95 hover:cursor-pointer"
+                  className="px-[2vw] py-[0.5vw] rounded-lg text-white bg-[#4cecf2] hover:bg-amber-300 transition-all duration-200 ease-linear hover:scale-95 hover:cursor-pointer"
                 >
                   Register
                 </Link>
