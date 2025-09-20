@@ -1,8 +1,9 @@
-
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Card from "../Components/ReportCard";
+import { AuthContext } from "../Context/AuthContext";
+import { ClipLoader } from "react-spinners";
 
 const ReportIncident = () => {
   const [title, setTitle] = useState("");
@@ -14,6 +15,7 @@ const ReportIncident = () => {
   const [longitude, setLongitude] = useState("");
   const [geolocationError, setGeolocationError] = useState("");
   const [responseData, setResponseData] = useState(null);
+  const { loading, setLoading } = useContext(AuthContext);
 
   // ✅ handle single file input
   const handle_file_input = (e) => {
@@ -48,7 +50,6 @@ const ReportIncident = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -66,7 +67,11 @@ const ReportIncident = () => {
         return;
       }
     } else {
-      if (!userEnteredLocation.trim() && !latitude.trim() && !longitude.trim()) {
+      if (
+        !userEnteredLocation.trim() &&
+        !latitude.trim() &&
+        !longitude.trim()
+      ) {
         alert("Please provide a manual location or enable device location.");
         return;
       }
@@ -86,6 +91,7 @@ const ReportIncident = () => {
     formData.append("image", selectedFile);
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:4000/api/v1/reports/upload-report",
         formData,
@@ -94,9 +100,12 @@ const ReportIncident = () => {
           withCredentials: true,
         }
       );
-      toast.success(response.data.message,{
-  className: "bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg",
-});
+      setLoading(false);
+      console.log(response.data);
+      toast.success(response.data.message, {
+        className:
+          "bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg",
+      });
       setResponseData(response.data.data);
 
       // reset
@@ -109,6 +118,7 @@ const ReportIncident = () => {
       setLongitude("");
       setGeolocationError("");
     } catch (error) {
+      setLoading(false);
       console.error("Submit error:", error);
     }
   };
@@ -135,54 +145,32 @@ const ReportIncident = () => {
               <h1 className="text-[1.5vw] text-[#1a365d] font-bold">
                 Preview Image :
               </h1>
-              <div className="w-fit border border-gray-200 rounded-lg overflow-auto p-[1vw] flex flex-wrap gap-4 max-h-[80%]">
-                {!selectedFile && (
+              <div className="w-full border rounded-lg overflow-hidden p-[1vw] flex justify-center items-center max-h-[80%] border-gray-300">
+                <div className="relative w-full max-w-md rounded-lg overflow-hidden shadow-md">
+                  {/* Hazard Report Image */}
                   <img
-                    src="https://picsum.photos/600/300/"
-                    className="size-full object-center object-contain rounded-lg"
-                    alt="Default preview"
+                    src={
+                      responseData?.images?.[0]?.url
+                        ? responseData.images[0].url
+                        : selectedFile
+                        ? URL.createObjectURL(selectedFile)
+                        : "/assets/placeholder.jpeg"
+                    }
+                    alt="Hazard Report"
+                    className="size-full object-contain object-center border-gray-200"
                   />
-                )}
 
-                {selectedFile && (() => {
-                  const url = URL.createObjectURL(selectedFile);
-                  const type = selectedFile.type;
-
-                  if (type.startsWith("image/")) {
-                    return (
-                      <img
-                        src={url}
-                        alt="preview"
-                        className="size-full rounded-lg object-contain object-center"
-                        onLoad={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else if (type.startsWith("video/")) {
-                    return (
-                      <video
-                        src={url}
-                        controls
-                        className="size-full rounded-lg"
-                        onLoadedData={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else if (type.startsWith("audio/")) {
-                    return (
-                      <audio
-                        src={url}
-                        controls
-                        className="size-full"
-                        onLoadedData={() => URL.revokeObjectURL(url)}
-                      />
-                    );
-                  } else {
-                    return (
-                      <p className="text-sm text-gray-500">
-                        Unsupported file: {selectedFile.name}
-                      </p>
-                    );
-                  }
-                })()}
+                  {/* Overlay for Lat & Lng */}
+                  {responseData ? (
+                    <div className="absolute bottom-0 left-0 w-full bg-black/60 text-white text-sm px-3 py-2 flex flex-col">
+                      <span>Lat: {responseData?.images?.[0].latitude}</span>
+                      <span>Lng: {responseData?.images?.[0].longitude}</span>
+                      <span>Location: {responseData?.images?.[0].location.city}</span>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -356,10 +344,18 @@ const ReportIncident = () => {
                 {/* Submit Button */}
                 <div className="pt-2">
                   <button
-                    type="submit"
-                    className="inline-block text-[1.2vw] px-[1vw] py-[0.5vw] bg-[#389bcd] text-white font-semibold rounded-md shadow-sm hover:bg-[#12648d] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#389bcd]"
+                    type={loading ? "button" : "submit"}
+                    className="text-[1.2vw] px-[1vw] py-[0.5vw] bg-[#389bcd] text-white font-semibold rounded-md shadow-sm hover:bg-[#12648d] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#389bcd] flex items-center gap-[0.7vw] transition-all duration-300 ease-linear disabled:opacity-70 disabled:cursor-not-allowed"
+                    disabled={loading}
                   >
-                    Submit Report
+                    {loading ? (
+                      <>
+                        <ClipLoader color="white" size={20} />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>Submit Report</>
+                    )}
                   </button>
                 </div>
               </form>
