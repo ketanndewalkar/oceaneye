@@ -51,6 +51,7 @@ export const validateReport = asyncHandler(async (req, res) => {
 
   report.reportVerificationStatus = status;
   await report.save({ validateBeforeSave: false });
+  console.log(report.reportVerificationStatus)
 
   return res
     .status(200)

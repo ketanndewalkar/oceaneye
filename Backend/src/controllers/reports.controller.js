@@ -9,12 +9,10 @@ export const uploadReport = asyncHandler(async (req, res) => {
   try {
     const { title, description, userEnteredLocation, latitude, longitude } =
       req.body;
-    console.log(userEnteredLocation)
+    console.log(userEnteredLocation);
     if (!title || !description || !latitude || !longitude) {
       throw new ApiError(401, "All fields are required");
     }
-
-    
 
     if (!req.file) {
       throw new ApiError(404, "No Image found");
@@ -72,7 +70,7 @@ export const uploadReport = asyncHandler(async (req, res) => {
           exif: exifData,
         },
       ],
-      userEnteredLocation
+      userEnteredLocation,
     });
 
     if (!report) {
@@ -113,51 +111,50 @@ export const getReportById = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, report, "Report for id fetched"));
 });
 
-
-
 export const PendingReports = asyncHandler(async (req, res) => {
   // This controller is for all pending reports needs to be reviewed by moderators
-  const reports = await Report.find({ moderatorVerificationStatus: "pending" }).populate("uploadedBy");
-
- 
+  const reports = await Report.find({
+    moderatorVerificationStatus: "pending",
+    "moderatorVerifications.verifiedBy": { $ne: req.user._id },
+  }).populate("uploadedBy");
 
   if (reports.length === 0) {
     throw new ApiError(404, "No reports found");
   }
 
-  return res.status(200).json(
-    new ApiResponse(200,reports,"All Pending Reports Fetched..")
-  )
-
+  return res
+    .status(200)
+    .json(new ApiResponse(200, reports, "All Pending Reports Fetched.."));
 });
 
-export const officialReviewPending = asyncHandler(async(req,res) => {
+export const officialReviewPending = asyncHandler(async (req, res) => {
   const reports = await Report.find({
-    moderatorApprovedCount : {$gte: 1},
-    officialVerificationStatus: { $ne: "approved" }
-  })
-  if(!reports){
-    throw new ApiError(404,"No Report found")
+    moderatorApprovedCount: { $gte: 1 },
+    officialVerificationStatus: { $ne: "approved" },
+  });
+  if (!reports) {
+    throw new ApiError(404, "No Report found");
   }
 
-  return res.status(200).json(
-    new ApiResponse(200,reports,"All pending Reports Fetched Succesfully")
-  )
-})
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, reports, "All pending Reports Fetched Succesfully")
+    );
+});
 
-// Approved Reports Controller 
+// Approved Reports Controller
 
-export const getApprovedReports = asyncHandler(async(req,res) => {
-   const reports = await Report.find({
-    reportVerificationStatus:"approved"
-   })
+export const getApprovedReports = asyncHandler(async (req, res) => {
+  const reports = await Report.find({
+    reportVerificationStatus: "approved",
+  });
 
-   if(!reports){
-    throw new ApiError(404,"No reports found")
-   }
+  if (!reports) {
+    throw new ApiError(404, "No reports found");
+  }
 
-   return res.status(200).json(
-    new ApiResponse(200,reports,"All reports fetched succesfully")
-   )
-
-})
+  return res
+    .status(200)
+    .json(new ApiResponse(200, reports, "All reports fetched succesfully"));
+});
