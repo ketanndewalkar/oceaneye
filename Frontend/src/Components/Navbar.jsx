@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
+import ProfileDropdown from "./ProfileDropdown";
+import { AuthContext } from "../Context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { user } = useContext(AuthContext);
   return (
     <div className="w-screen h-[15vh] py-[1vw] px-[4vw] absolute top-0 left-0 z-[200] nav">
       <div className="size-full relative">
         <nav className="w-full h-full flex justify-between items-center rounded-lg px-[3vw] bg-white/50 backdrop-blur-md border border-white/30 shadow-lg nav1">
-          
           {/* Logo Section */}
           <div className="w-fit flex items-center h-full p-[0.2vw] shrink-0 nav11">
             <img
@@ -22,38 +23,57 @@ const Navbar = () => {
           {/* Desktop Links */}
           <ul className="hidden md:flex w-full justify-end gap-[3vw] items-center text-[1.2vw] font-semibold nav12">
             <li>
-              <Link to="/" className="hover:text-[#24a392] transition-all duration-300 ease-linear">
+              <Link
+                to="/"
+                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/liveAlerts" className="hover:text-[#24a392] transition-all duration-300 ease-linear">
+              <Link
+                to="/liveAlerts"
+                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
+              >
                 Live Alerts
               </Link>
             </li>
             <li>
-              <Link to="/reportIncident" className="hover:text-[#24a392] transition-all duration-300 ease-linear">
+              <Link
+                to="/reportIncident"
+                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
+              >
                 Report Incident
               </Link>
             </li>
             <li>
-              <Link to="/viewReports" className="hover:text-[#24a392] transition-all duration-300 ease-linear">
+              <Link
+                to="/viewReports"
+                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
+              >
                 View Reports
               </Link>
             </li>
             <li>
-              <Link to="/contact" className="hover:text-[#24a392] transition-all duration-300 ease-linear">
+              <Link
+                to="/contact"
+                className="hover:text-[#24a392] transition-all duration-300 ease-linear"
+              >
                 Contact
               </Link>
             </li>
-            <li>
-              <Link
-                to="/signup"
-                className="px-[2vw] py-[0.5vw] rounded-lg text-white bg-[#389bcd] transition-all duration-200 ease-linear hover:scale-95 hover:cursor-pointer"
-              >
-                Register
-              </Link>
-            </li>
+            {!user ? (
+              <li>
+                <Link
+                  to="/signup"
+                  className="px-[2vw] py-[0.5vw] rounded-lg text-white bg-[#389bcd] transition-all duration-200 ease-linear hover:scale-95 hover:cursor-pointer"
+                >
+                  Register
+                </Link>
+              </li>
+            ) : (
+              <ProfileDropdown />
+            )}
           </ul>
 
           {/* Hamburger Icon (Mobile) */}
@@ -94,15 +114,20 @@ const Navbar = () => {
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/signup"
-                  onClick={() => setIsOpen(false)}
-                  className="px-6 py-2 rounded-lg text-white bg-[#389bcd] transition-all duration-200 ease-linear hover:scale-95"
-                >
-                  Register
-                </Link>
-              </li>
+
+              {!user ? (
+                <li>
+                  <Link
+                    to="/signup"
+                    onClick={() => setIsOpen(false)}
+                    className="px-6 py-2 rounded-lg text-white bg-[#389bcd] transition-all duration-200 ease-linear hover:scale-95"
+                  >
+                    Register
+                  </Link>
+                </li>
+              ) : (
+                <ProfileDropdown />
+              )}
             </ul>
           </div>
         )}
