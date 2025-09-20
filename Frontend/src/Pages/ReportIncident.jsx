@@ -94,9 +94,9 @@ const ReportIncident = () => {
           withCredentials: true,
         }
       );
-      toast(response.data.message);
-
-      console.log("Upload response:", response.data);
+      toast.success(response.data.message,{
+  className: "bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg",
+});
       setResponseData(response.data.data);
 
       // reset
@@ -109,7 +109,6 @@ const ReportIncident = () => {
       setLongitude("");
       setGeolocationError("");
     } catch (error) {
-      alert("Failed to submit report.");
       console.error("Submit error:", error);
     }
   };

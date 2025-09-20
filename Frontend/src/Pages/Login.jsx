@@ -67,15 +67,23 @@ export default function Login() {
       if (res.status === 200) {
         login(res.data.data);
         setLoading(false);
-        toast(res.data.message);
+        toast.success(res.data.message, {
+  className: "bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg",
+});
         navigate("/");
       } else {
         setLoading(false);
-        toast("status code:", res.status);
+        console.log(res.data);
+        toast.error(res.status,{
+  className: "bg-red-600 text-white px-4 py-2 rounded-lg shadow-md",
+});
       }
     } catch (error) {
       setLoading(false);
       console.log(error);
+      toast.error(error.message,{
+  className: "bg-red-600 text-white px-4 py-2 rounded-lg shadow-md",
+});
     }
   };
 

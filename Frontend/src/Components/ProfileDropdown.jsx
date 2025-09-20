@@ -69,7 +69,7 @@ const ProfileDropdown = () => {
           {/* Logout Button */}
           <button
             onClick={logout}
-            className="w-full text-left px-4 py-2 hover:bg-red-50 hover:text-red-700 text-red-600 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center justify-start"
+            className="w-full text-left px-4 py-2 hover:bg-red-50 hover:text-red-700 text-red-600 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 flex items-center justify-start"
           >
             <LogoutIcon className="w-4 h-4 mr-2 inline-block" />
             Sign Out
