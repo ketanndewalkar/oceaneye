@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(200);
   const roleBasedRoutes = {
-    "moderators":"/moderator-dashboard",
+    "moderator":"/moderator-dashboard",
     "official":"/official-dashboard"
   }
   // ✅ Parse from localStorage, default to null

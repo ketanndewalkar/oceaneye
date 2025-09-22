@@ -39,25 +39,25 @@ const Hero3 = () => {
       <div className="w-full flex justify-between items-center gap-6 home32 ">
         {/* card-1 */}
         <ReportCard
-          image="../public/assets/spotharzard.jpeg"
+          image="/assets/spotharzard.jpeg"
           title="📍Spot Hazards Fast"
           description="Quickly capture and report ocean hazards with just a tap — simple, fast, and effective."
         />
     {/* card-2 */}
         <ReportCard
-          image="../public/assets/map.png"
+          image="/assets/map.png"
           title=" 🗺 Interactive Map View"
           description="See all reported hazards on a live map so you know exactly what’s happening around you."
         />
  {/* card-3 */}
         <ReportCard
-          image="../public/assets/verification.jpg"
+          image="/assets/verification.jpg"
           title="✅ Two-Step Verification"
           description="Every report is checked by both a moderator and an official, so only trusted information appears on the map."
         />
  {/* card-4 */}
         <ReportCard
-          image="../public/assets/community.jpg"
+          image="/assets/community.jpg"
           title="🤝 Community Powered"
           description="Join a growing network of ocean watchers where every report helps protect our waters."
         />
