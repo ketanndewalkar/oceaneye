@@ -51,7 +51,7 @@ const Hero3 = () => {
         />
  {/* card-3 */}
         <ReportCard
-          image="/assets/verification.jpg"
+          image="/assets/Verification.jpg"
           title="✅ Two-Step Verification"
           description="Every report is checked by both a moderator and an official, so only trusted information appears on the map."
         />
