@@ -78,16 +78,13 @@ export const login = asyncHandler(async (req, res) => {
   const AccessToken = existingUser.generateAccessToken();
   const user = await User.findOne({ email }).select("-password");
   const cookieOptions = {
-    httpOnly: true,
+  httpOnly: true,           // prevents JS access to cookie
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+  secure: true,             // must be true for HTTPS (Render uses HTTPS)
+  sameSite: "None",         // required for cross-site requests
+  path: "/",                // cookie available for entire domain
+};
 
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
-    secure: false, // true in production with HTTPS
-    sameSite: "lax",
-    path: "/",
-
-    
-
-  };
 
   return res
     .status(200)
