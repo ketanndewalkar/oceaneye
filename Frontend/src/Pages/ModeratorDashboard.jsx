@@ -10,7 +10,7 @@ const ModeratorDashboard = () => {
   const [reports, setReports] = useState([]);
   const getReports = async () => {
     const res = await axios.get(
-      "http://localhost:4000/api/v1/reports/get-pending-reports",
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/reports/get-pending-reports`,
       {
         withCredentials: true,
       }

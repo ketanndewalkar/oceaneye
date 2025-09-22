@@ -93,7 +93,7 @@ const ReportIncident = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:4000/api/v1/reports/upload-report",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/reports/upload-report`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

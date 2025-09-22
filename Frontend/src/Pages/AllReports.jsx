@@ -6,7 +6,7 @@ const AllReports = () => {
   const [reports,setreports] = useState([]);
   const getReports = async () =>{
     const res = await axios.get(
-      "http://localhost:4000/api/v1/reports/get-approved-reports",
+      `${import.meta.env.VITE_BACKEND_URL}/api/v1/reports/get-approved-reports`,
       { withCredentials: true }
     );
     console.log(res.data.data)

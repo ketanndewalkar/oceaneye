@@ -58,7 +58,7 @@ export default function Login() {
       console.log(formData);
       setLoading(true);
       const res = await axios.post(
-        "http://localhost:4000/api/v1/users/login",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/login`,
         formData,
         {
           withCredentials: true,
